@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping list example</title>
+    <style>
+      li {
+        margin-bottom: 10px;
+      }
+
+      li button {
+        font-size: 12px;
+        margin-left: 20px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>My shopping list</h1>
+
+    <div>
+      <label for="item">Enter a new item:</label>
+      <input type="text" name="item" id="item" />
+      <button>Add item</button>
+    </div>
+
+    <ul></ul>
+
+    <script>
+      const shoppingList = document.querySelector('ul');
+      const inputField = document.querySelector('input');
+      const addButton = document.querySelector('button');
+
+      addButton.addEventListener('click', onClick);
+      inputField.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          onClick();
+        }
+      });
+
+      function onClick(e) {
+        if (inputField.value) {
+          const shoppingItem = inputField.value;
+          const listItem = document.createElement('li');
+          listItem.textContent =
+            shoppingItem.charAt(0).toUpperCase() + shoppingItem.slice(1);
+          listItem.style.fontSize = '20px';
+
+          shoppingList.append(listItem);
+        }
+
+        inputField.value = '';
+        inputField.focus();
+      }
+    </script>
+  </body>
+</html>
