@@ -1,0 +1,10 @@
+[submodule "css/css-exercises"]
+    path = css/css-exercises
+    url = https://github.com/simeon2002/css-exercises.git
+[submodule "projects/landing_page"]
+    path = projects/landing_page
+    url = https://github.com/simeon2002/landing_page.git
+[submodule "projects/odin-recipes"]
+    path = projects/odin-recipes
+    url = https://github.com/your-username/odin-recipes.git
+
