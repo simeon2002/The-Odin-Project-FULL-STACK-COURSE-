@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', generateGrid);
 btnGridSize.addEventListener('click', (event) => {
   removeGrid();
   generateGrid(event);
+  console.log('resizing done');
 });
 gridContainer.addEventListener('mouseover', changeColor);
 
@@ -18,6 +19,7 @@ gridContainer.addEventListener('mouseover', changeColor);
  */
 function changeColor(event) {
   currentElement = event.target;
+  if (currentElement.classList.contains('row')) return;
   currentElement.style.backgroundColor = 'red';
 }
 

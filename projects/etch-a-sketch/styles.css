@@ -26,13 +26,13 @@ body {
   /* height: 25%; */
   width: 100%;
   box-sizing: border-box;
-  border: 2px solid black;
+  /* border: 2px solid black; */
   display: flex;
   flex-direction: row;
 }
 
 .el {
-  border: 2px solid black;
+  /* border: 2px solid black; */
   height: 100%;
   box-sizing: border-box;
 }
