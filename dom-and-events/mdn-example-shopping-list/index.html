@@ -26,11 +26,19 @@
     </div>
 
     <ul></ul>
-
+    <a href="https://www.javascripttutorial.net/" target="_blank"
+      >JS Tutorial</a
+    >
     <script>
       const shoppingList = document.querySelector('ul');
       const inputField = document.querySelector('input');
       const addButton = document.querySelector('button');
+      const link = document.querySelector('a');
+
+      link.addEventListener('click', (e) => {
+        console.log('clicked');
+        // event.preventDefault();
+      });
 
       addButton.addEventListener('click', onClick);
       inputField.addEventListener('keydown', (e) => {
@@ -39,18 +47,30 @@
         }
       });
 
+      document.body.addEventListener('click', (e) => {
+        console.log(e.target);
+      });
+
       function onClick(e) {
+        console.log(e.eventPhase);
         if (inputField.value) {
           const shoppingItem = inputField.value;
           const listItem = document.createElement('li');
+          const deleteButton = document.createElement('button');
+
           listItem.textContent =
             shoppingItem.charAt(0).toUpperCase() + shoppingItem.slice(1);
           listItem.style.fontSize = '20px';
+          deleteButton.textContent = 'Delete';
+          deleteButton.addEventListener('click', (e) => {
+            e.target.parentNode.remove(); // removes item from shopping list
+          });
 
+          listItem.append(deleteButton);
           shoppingList.append(listItem);
         }
 
-        inputField.value = '';
+        inputField.value = ''; // clear input field
         inputField.focus();
       }
     </script>
