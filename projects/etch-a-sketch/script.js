@@ -2,6 +2,10 @@
 const gridContainer = document.querySelector('.grid-container');
 const inputGridSize = document.querySelector('input[name="grid-size"');
 const btnGridSize = document.querySelector('#btn-resize');
+const inputColorPicker = document.querySelector('input[name="color-picker"');
+const btnRandomize = document.querySelector('#btn-randomize');
+let randomized = false;
+let mouseClicked = false;
 
 // at loading, generate grid with specified default value
 document.addEventListener('DOMContentLoaded', generateGrid);
@@ -12,7 +16,20 @@ btnGridSize.addEventListener('click', (event) => {
   generateGrid(event);
   console.log('resizing done');
 });
-gridContainer.addEventListener('mouseover', changeColor);
+
+gridContainer.addEventListener('mousedown', () => (mouseClicked = true));
+gridContainer.addEventListener('mouseup', () => (mouseClicked = false));
+// changes color when mouse moves over grid element AND mouse is clicked.
+gridContainer.addEventListener('mouseover', (event) => {
+  if (mouseClicked) changeColor(event);
+  console.log('testing');
+});
+
+// toggles the use of random colors
+btnRandomize.addEventListener('click', toggleRandomizedColor);
+
+// when color picker has been selected, automatically turn off random colors!
+inputColorPicker.addEventListener('click', (e) => (randomized = false));
 
 /**
  * function will change the color of a grid element based on the color selection
@@ -20,7 +37,20 @@ gridContainer.addEventListener('mouseover', changeColor);
 function changeColor(event) {
   currentElement = event.target;
   if (currentElement.classList.contains('row')) return;
-  currentElement.style.backgroundColor = 'red';
+  console.log(inputColorPicker.value);
+  if (randomized) {
+    const randomGreen = Math.random() * 256;
+    const randomRed = Math.random() * 256;
+    const randomBlue = Math.random() * 256;
+    currentElement.style.backgroundColor = `rgb(${randomRed}, ${randomGreen}, ${randomBlue})`;
+  } else currentElement.style.backgroundColor = inputColorPicker.value;
+}
+
+/**
+ * toggles random colors.
+ */
+function toggleRandomizedColor() {
+  randomized = !randomized;
 }
 
 /**
