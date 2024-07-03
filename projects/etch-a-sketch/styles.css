@@ -1,0 +1,38 @@
+body {
+  margin: 0;
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.grid-container {
+  background-color: blue;
+  height: 80%;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.btn-resize-container {
+  margin: 0 auto;
+}
+
+.row {
+  /* height: 25%; */
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid black;
+  display: flex;
+  flex-direction: row;
+}
+
+.el {
+  border: 2px solid black;
+  height: 100%;
+  box-sizing: border-box;
+}
