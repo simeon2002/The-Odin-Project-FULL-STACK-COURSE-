@@ -4,7 +4,64 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rock Paper Scissors Game</title>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
   </head>
-  <body></body>
+  <body>
+    <div class="container">
+      <div class="title">
+        <h1>ROCK PAPER SCISSORS</h1>
+      </div>
+      <div class="game-container">
+        <div class="player-container container-styling">
+          <h1>Player</h1>
+          <div class="player-choices">
+            <button id="rock-btn" data-choice="0" class="img-btn">
+              <img
+                src="rock.gif"
+                alt="image of a rock as choice"
+                height="200px"
+                width="200px"
+              />
+            </button>
+            <button id="paper-btn" data-choice="2" class="img-btn">
+              <img
+                src="paper.gif"
+                alt="image of paper as choice"
+                height="200px"
+                width="200px"
+              />
+            </button>
+            <button id="scissors-btn" data-choice="1" class="img-btn">
+              <img
+                src="scissors.gif"
+                alt="image of scissors as choice"
+                height="200px"
+                width="200px"
+              />
+            </button>
+          </div>
+          <p>MAKE YOUR CHOICE</p>
+        </div>
+        <h1 id="vs-text">VS</h1>
+        <div class="computer-container container-styling">
+          <h1>Computer</h1>
+          <img
+            src="computer-choices.gif"
+            alt="computer choices showing rock, paper and scissors in an alternating manner"
+            width="200px"
+            height="200px"
+          />
+          <!--Use dispatch event to trigger event to here
+        when user makes a choice-->
+        </div>
+      </div>
+      <div class="result-container">
+        <h1>
+          RESULT: User <span id="user-score">0</span> - Computer
+          <span id="computer-score">0</span>
+        </h1>
+      </div>
+    </div>
+  </body>
 </html>

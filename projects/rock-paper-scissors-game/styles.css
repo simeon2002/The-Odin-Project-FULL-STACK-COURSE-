@@ -1,0 +1,76 @@
+body {
+  margin: 0;
+}
+
+.img-btn {
+  background-color: transparent;
+  border: 0;
+}
+
+.img-btn:hover {
+  background-color: #f2f2f252;
+}
+
+.img-btn:active {
+  background-color: #efefefd2;
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin-top: -40px;
+}
+
+.game-container {
+  display: flex;
+  /* background-color: red; */
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+}
+
+.player-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  /* gap: 20px; */
+}
+
+.player-container p {
+  font-size: 32px;
+}
+
+.player-choices {
+  display: flex;
+}
+
+.container-styling > h1 {
+  margin-top: 0;
+  margin-bottom: 0;
+  color: black;
+}
+
+#vs-text {
+  font-size: 44px;
+  margin: 0;
+}
+
+.computer-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-styling {
+  background-color: red;
+  padding: 20px;
+  width: 650px;
+  height: 400px;
+}

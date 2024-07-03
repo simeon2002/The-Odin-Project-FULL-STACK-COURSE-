@@ -2,45 +2,111 @@ function computerGuess() {
   return Math.floor(Math.random() * 3);
 }
 
-function userGuess() {
-  choice = Number(
-    prompt(
-      'What is your choice? Input 0 for rock, 1 for scissors and 2 for paper!'
-    )
-  );
-  while (![0, 1, 2].includes(choice)) {
-    choice = Number(
-      prompt(
-        'Incorrect choice, choose again! Input 0 for rock, 1 for scissors and 2 for paper.'
-      )
-    );
+function changeComputerGif(computerGuess) {
+  const imgComputer = document.querySelector('.computer-container img');
+  console.log(imgComputer.src);
+  console.log(computerGuess);
+  switch (computerGuess) {
+    case 0:
+      imgComputer.src = 'rock.gif';
+      return;
+    case 1:
+      imgComputer.src = 'scissors.gif';
+      return;
+    case 2:
+      imgComputer.src = 'paper.gif';
+      return;
+    default:
+      return;
   }
-  return choice;
+}
+
+function getUserChoice(e) {
+  return parseInt(e.currentTarget.dataset.choice); // corresponds to the equivalent choice 0 = rock, 1 = scissors, 2 = paper
+}
+
+/**
+ *
+ * @returns -1: computer won, 0: a tie, 1: user won
+ */
+function determineWinner(userGuess, pcGuess) {
+  let roundWinner;
+  switch (userGuess) {
+    case 0:
+      if (pcGuess == 0) roundWinner = 0;
+      else if (pcGuess == 1) roundWinner = 1;
+      else roundWinner = -1;
+      break;
+    case 1:
+      if (pcGuess == 0) roundWinner = -1;
+      else if (pcGuess == 1) roundWinner = 0;
+      else roundWinner = 1;
+      break;
+    case 2:
+      if (pcGuess == 0) roundWinner = 1;
+      else if (pcGuess == 1) roundWinner = -1;
+      else roundWinner = 0;
+      break;
+    default:
+      roundWinner = 0;
+      break;
+  }
+  console.log(roundWinner);
+  return roundWinner;
+}
+
+/**
+ * function updated result of user and computer. if Tie, both will get a point.
+ * When 5 rounds are played, a gamewinner message will be displayed.
+ */
+function updateResult() {
+  const resultContainer = document.querySelector('.result-container');
+  const resultMessage = resultContainer.children[0];
+  console.log(resultMessage);
+
+  const userScoreEl = resultMessage.children[0];
+  const computerScoreEl = resultMessage.children[1];
+
+  if (countRoundsPlayed == 5) {
+    resultMessage.textContent = `The game is over! `;
+    finalResult = counterUserWon - counterComputerWon;
+    if (finalResult == 0)
+      resultMessage.textContent += `The game was a tie, with a result of ${counterUserWon} against ${counterComputerWon}.`;
+    else if (finalResult > 0)
+      resultMessage.textContent += `You have won, with a result of ${counterUserWon} against ${counterComputerWon} for you!`;
+    else
+      resultMessage.textContent += `Unfortunately, the computer has won, with a result of ${counterComputerWon} against ${counterUserWon}.`;
+  } else {
+    userScoreEl.textContent = counterUserWon;
+    computerScoreEl.textContent = counterComputerWon;
+  }
 }
 
 /**
  * function playing a round. 0 = rock, 1 = scissor, 2 = paper
  * @returns 1 if user has won, 0 if tie, -1 if computer has won
  */
-function playRound() {
-  pcGuess = computerGuess();
-  uGuess = userGuess();
-  switch (uGuess) {
-    case 0:
-      if (pcGuess == 0) return 0;
-      else if (pcGuess == 1) return 1;
-      else return -1;
-    case 1:
-      if (pcGuess == 0) return -1;
-      else if (pcGuess == 1) return 0;
-      else return 1;
-    case 2:
-      if (pcGuess == 0) return 1;
-      else if (pcGuess == 1) return -1;
-      else return 0;
-    default:
-      break;
+function playRound(e) {
+  const pcGuess = computerGuess();
+  changeComputerGif(pcGuess);
+  const userGuess = getUserChoice(e);
+
+  let roundResult = determineWinner(userGuess, pcGuess);
+  // updates result
+  if (roundResult == 1) {
+    counterUserWon++;
+    console.log('You have won this round');
+  } else if (roundResult == -1) {
+    counterComputerWon++;
+    console.log('Computer has won this round');
+  } else {
+    counterComputerWon++;
+    counterUserWon++;
+    console.log('It was a tie');
   }
+
+  countRoundsPlayed++;
+  updateResult();
 }
 
 function displayWinnerMessage(numberOfWinsUser, numberOfWinsComputer) {
@@ -60,56 +126,21 @@ function displayResultMessage(numberOfWinsUser, numberOfWinsComputer) {
 }
 
 function playGame() {
-  /*
-  variables:
-  - computerGuess
-  - userGuess
-  - countUserWon
-  - numberOfGames
-  */
-  numberOfGames = Number(prompt('how many rounds to play?')) || 3;
-  console.log(numberOfGames);
-  counterUserWon = 0;
-  counterComputerWon = 0;
-  for (i = 0; i < numberOfGames; i++) {
-    roundResult = playRound();
-    if (roundResult == 1) {
-      counterUserWon++;
-      console.log('You have won this round');
-    } else if (roundResult == -1) {
-      counterComputerWon++;
-      console.log('Computer has won this round');
-    } else {
-      counterComputerWon++;
-      counterUserWon++;
-      console.log('It was a tie');
-    }
-    displayResultMessage(counterUserWon, counterComputerWon);
-  }
-  displayWinnerMessage(counterUserWon, counterComputerWon);
-}
+  const btnRock = document.querySelector('#rock-btn');
+  const btnPaper = document.querySelector('#paper-btn');
+  const btnScissors = document.querySelector('#scissors-btn');
 
-//SET computerGuess CALL computerGuess returning guess of computer
-//SET userGuess to CALL userGuess returning guess of user.
-//SET numberOfGames to prompted value.
-//FOR each round
-//  CALL playRound() returning 1 if user 1, 0 if PC won, -1 if a tie is present.
-//  IF user won
-//    Increment countUserWon
-//  OUTPUT display intermediate result
-//ENDFOR
-//IF number of user games won > computer games won
-//  OUTPUT message user has won.
-//ELSE
-//  OUTPUT message computer has won.
-//OUTPUT display details of score
+  btnRock.addEventListener('click', playRound);
+  btnPaper.addEventListener('click', playRound);
+  btnScissors.addEventListener('click', playRound);
+
+  // displayResultMessage(counterUserWon, counterComputerWon);
+  // }
+  // displayWinnerMessage(counterUserWon, counterComputerWon);
+}
 
 // BEGIN PROGRAM
-// CALL playGame
+let counterUserWon = 0;
+let counterComputerWon = 0;
+let countRoundsPlayed = 0;
 playGame();
-playAgain = confirm('Want to play another game?');
-while (playAgain) {
-  playGame();
-  playAgain = confirm('Want to play another game?');
-}
-console.log('The program has finished.');
