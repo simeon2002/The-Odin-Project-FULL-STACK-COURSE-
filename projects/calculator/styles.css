@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.wrapper-container {
+  display: flex; /* in order to center calculator */
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.calculator-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background-color: blue;
+  padding: 40px 20px;
+}
