@@ -4,49 +4,51 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculator</title>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="wrapper-container">
       <div class="calculator-container">
-        <div class="input-container">
-          <input type="text" id="input-calculation" name="text" />
-        </div>
+        <!-- <div class="input-container"> -->
+          <input type="text" id="input-calculation" name="input-calculation" readonly/>
+        <!-- </div> -->
         <div class="btns-container">
           <div class="numbers-container">
             <div class="operators-container-top">
               <button id="undo" class="btn">A/C</button>
               <button id="negate" class="btn">(-)</button>
             </div>
-            <div class="numbers-column1">
-              <button id="7" class="btn">9</button>
-              <button id="4" class="btn">4</button
-              ><button id="1" class="btn">1</button
-              ><button id="0" class="btn">0</button>
+            <div class="number-columns-container">
+            <div class="numbers-column numbers-column1">
+              <button id="num7" class="btn">7</button>
+              <button id="num8" class="btn">8</button>
+              <button id="num9" class="btn">9</button>
             </div>
-            <div class="numbers-column2">
-              <button id="8" class="btn">8</button>
-              <button id="5" class="btn">5</button>
-              <button id="2" class="btn">2</button>
-              <button id="float-point" class="btn">.</button>
+            <div class="numbers-column numbers-column2">
+              <button id="num4" class="btn">4</button>
+              <button id="num5" class="btn">5</button>
+              <button id="num6" class="btn">6</button>
             </div>
-            <div class="numbers-column3">
-              <button id="9" class="btn">9</button>
-              <button id="6" class="btn">6</button>
-              <button id="3" class="btn">3</button>
+            <div class="numbers-column numbers-column3">
+              <button id="num1" class="btn">1</button>
+              <button id="num2" class="btn">2</button>
+              <button id="num3" class="btn">3</button>
+            </div>
+            <div class="numbers-column numbers-column4">
+              <button id="num0" class="btn">0</button>
+              <button id="decimal-point" class="btn">.</button>
+            </div>
             </div>
           </div>
-          <div class="operators-container-right">
-            <button class="btn" id="btn-multiply">*</button>
-            <button class="btn" id="btn-exponent">**</button>
-            <button class="btn" id="btn-divide">/</button>
-            <button class="btn" id="btn-add">+</button>
-            <button class="btn" id="btn-subtract">-</button>
-            <button class="btn" id="btn-evaluate">=</button>
-          </div>
+        <div class="operators-container-right">
+          <button class="btn" id="btn-multiply">*</button>
+          <button class="btn" id="btn-divide">/</button>
+          <button class="btn" id="btn-add">+</button>
+          <button class="btn" id="btn-subtract">-</button>
+          <button class="btn" id="btn-evaluate">=</button>
         </div>
-      </div>
+        </div>
     </div>
   </body>
 </html>

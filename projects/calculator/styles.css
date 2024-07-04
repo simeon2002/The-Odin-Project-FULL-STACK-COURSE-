@@ -14,8 +14,77 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   gap: 20px;
   background-color: blue;
-  padding: 40px 20px;
+  padding: 30px 10px 40px 10px;
+  flex-shrink: 1;
+}
+
+.btns-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.operators-container-right {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.operators-container-top {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#undo {
+  /* flex-basis: auto; */
+  flex-grow: 1;
+}
+
+.numbers-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.number-columns-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.numbers-column {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+#input-calculation {
+  width: 75%;
+  text-align: right;
+  flex-basis: 30px;
+  flex-shrink: 1;
+  margin: 0 auto;
+}
+
+#num0 {
+  /* flex-basis: 0; gives the hypothetical size to be the min-width of the element */
+  flex-grow: 1;
+}
+
+.btn {
+  width: 30px;
+  color: white;
+  background-color: black;
+  border: none;
+  box-shadow: 1px 1px rgba(186, 186, 186, 0.462);
+  border-radius: 3px;
+  padding: 3px 0;
+}
+
+.btn:active {
+  background-color: rgb(120, 120, 120);
 }
