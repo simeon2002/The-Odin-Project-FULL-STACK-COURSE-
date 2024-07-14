@@ -26,6 +26,7 @@ let calculator = {
   },
   showSecondOperand: false, // used for input clearance for second operator
   secondOperatorMode: false, // tells button operator buttons that 2nd operand is being filled.
+  firstCalculation: true, // indicated that current calculation is the first in the sequence
 };
 
 //adding event listeners
@@ -57,7 +58,11 @@ containerOperationButtonsRight.addEventListener('click', (e) => {
       calculator.secondOperand = 0;
       calculator.secondOperatorMode = false;
       calculator.operator.value = '';
+      calculator.operator.operandClicked = false;
+      resetBgColor();
+      calculator.firstCalculation = false;
     }
+
     calculator.showSecondOperand = false;
   }
 });
@@ -66,9 +71,9 @@ containerOperationButtonsRight.addEventListener('click', (e) => {
 
 function arithmeticOperatorClicked(e) {
   if (e.target.textContent === '=') return;
-  if (!e.target.id.includes('btn')) return;
+  if (!e.target.id.includes('btn') && calculator.secondOperatorMode) return;
   // revert bg color operator clicked
-  removeOperatorBGClicked(e);
+  resetBgColor();
   // store operator in object
   calculator.operator.value = e.target.textContent;
   // set boolean flag to true.
@@ -85,6 +90,11 @@ function arithmeticOperatorClicked(e) {
 
 function displayFirstOperand(e) {
   if (calculator.operator.operandClicked === false) {
+    if (!calculator.secondOperatorMode && !calculator.firstCalculation) {
+      calculator.firstCalculation = true;
+      clearInput();
+      calculator.firstOperand = 0;
+    }
     mapButtonInputToDisplay(e);
   }
 }
@@ -115,16 +125,19 @@ function getInputValue(e) {
 }
 
 function setOperatorBG(e) {
-  e.target.style.backgroundColor = 'rgb(120, 120, 120)';
+  e.target.classList.add('btn-clicked');
 }
 
-function removeOperatorBGClicked(e) {
-  const currentButtonClicked = Array.from(e.currentTarget.children).filter(
-    (element) => element.textContent === calculator.operator.value
-  )[0];
-
-  if (currentButtonClicked)
-    currentButtonClicked.style.backgroundColor = 'black';
+function resetBgColor() {
+  const operatorButtonList = Array.from(
+    containerOperationButtonsRight.children
+  );
+  operatorButtonList.forEach((element) => {
+    btnClasses = [...element.classList];
+    if (btnClasses.includes('btn-clicked')) {
+      element.classList.remove('btn-clicked');
+    }
+  });
 }
 
 function sum(a, b) {
@@ -172,5 +185,7 @@ function resetCalculator() {
   calculator.result = 0;
   calculator.operator.operandClicked = false;
   calculator.operator.value = '';
-  calculator.showResult = false;
+  calculator.showSecondOperand = false;
+  calculator.secondOperatorMode = false;
+  resetBgColor();
 }
