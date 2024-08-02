@@ -6,17 +6,11 @@ class CodeMaker
   include SharedConstants
   include UtilityMethods
 
-  def generate_code
-    code = []
-    CODE_LENGTH.times do |i|
-      code[i] = COLORS[rand(0...(COLORS.length))]
-    end
-    p code if DEBUG
-    code
-  end
+  # defined in sub classes
+  def generate_code; end
 
   def provide_feedback(guess, code)
-    debugger if DEBUG
+    debugger if DEBUG # rubocop:disable Lint/Debugger
 
     correct_positions_count = get_correct_positions_count(guess, code)
 

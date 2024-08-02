@@ -1,7 +1,9 @@
 require 'debug'
 require_relative 'board'
-require_relative 'code_breaker'
-require_relative 'code_maker'
+require_relative 'human_code_maker'
+require_relative 'computer_code_maker'
+require_relative 'human_code_breaker'
+require_relative 'computer_code_breaker'
 require_relative 'shared_constants'
 require_relative 'utility_methods'
 
@@ -12,13 +14,34 @@ class Game
 
   def initialize
     @board = Board.new
-    @code_breaker = CodeBreaker.new
-    @code_maker = CodeMaker.new
+    @code_breaker = nil
+    @code_maker = nil
   end
 
   def setup_game
+    case extract_player_role_from_input
+    when 0
+      self.code_breaker = HumanCodeBreaker.new
+      self.code_maker = ComputerCodeMaker.new
+    when 1
+      self.code_breaker = ComputerCodeBreaker.new
+      self.code_maker = HumanCodeMaker.new
+      debugger
+    end
+
     code = code_maker.generate_code
     board.setup_code(code)
+  end
+
+  def extract_player_role_from_input
+    puts 'Do you want to play as the person breaking the code or making the code? write a 0 or 1, respectively'
+
+    loop do
+      choice = convert_to_i(gets.chomp)
+      return choice if [0, 1].include?(choice)
+
+      puts 'Please provide a 0 or 1.'
+    end
   end
 
   def play_game # rubocop:disable Metrics/MethodLength
@@ -41,8 +64,10 @@ class Game
   end
 
   def process_guess(guess_number)
-    guess = code_breaker.get_guess
-    guess = convert_guess_to_colors(guess)
+    debugger if DEBUG
+    guess = code_breaker.generate_guess
+    p guess if DEBUG
+    guess = convert_code_to_colors(guess)
     board.update_data(
       guess_number,
       guess,
@@ -50,12 +75,6 @@ class Game
       code_maker.get_correct_colors_count(guess, board.code)
     )
     guess
-  end
-
-  def convert_guess_to_colors(guess)
-    guess.map do |el|
-      convert_color_index_to_color(el)
-    end
   end
 
   def winner_in_hash?(guess)

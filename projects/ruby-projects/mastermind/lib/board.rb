@@ -17,7 +17,6 @@ class Board
   end
 
   def display(winner_present)
-    debugger if board.length == 13
     puts "\nBOARD\n_____".colorize(mode: :bold)
 
     board.each_with_index do |guess, index|
@@ -27,8 +26,7 @@ class Board
       else
         display_guess_in_color(guess)
       end
-      # debugger
-      print "|| #{guess_hints[index][0].to_s.colorize(color: :red)} - #{guess_hints[index][1].to_s.colorize(color: :white)} " # rubocop:disable Layout/LineLength.
+      display_hint(index)
       puts
     end
   end
@@ -56,6 +54,10 @@ class Board
       CODE_LENGTH.times { |_| print 'X'.colorize(mode: :bold) }
     end
     puts
+  end
+
+  def display_hint(index)
+    print "|| #{guess_hints[index][0].to_s.colorize(color: :red)} - #{guess_hints[index][1].to_s.colorize(color: :white)} " # rubocop:disable Layout/LineLength.
   end
 
   def setup_code(code)

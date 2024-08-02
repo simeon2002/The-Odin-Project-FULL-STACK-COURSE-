@@ -21,4 +21,27 @@ module UtilityMethods # rubocop:disable Style/Documentation
   def convert_color_index_to_color(index)
     COLORS[index]
   end
+
+  def extract_code_from_input
+    code = gets.split(/\s*,\s*|\s+/)
+    # debugger if DEBUG
+    unless only_permitted_integers_present?(code) && code_length_correct?(code)
+      puts "Please provide only integers corresponding to the correct color that are ranging from 1 to #{CODE_LENGTH}.."
+        .colorize(
+          color: :red, mode: :bold
+        )
+      return nil
+    end
+    code.map { |el| convert_to_i(el) - 1 }
+  end
+
+  def code_length_correct?(code)
+    code.length == CODE_LENGTH
+  end
+
+  def convert_code_to_colors(code)
+    code.map do |el|
+      convert_color_index_to_color(el)
+    end
+  end
 end
