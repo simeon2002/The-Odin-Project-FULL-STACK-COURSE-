@@ -9,8 +9,8 @@ class CodeBreaker # rubocop:disable Style/Documentation
   def get_guess # rubocop:disable Naming/AccessorMethodName
     guess = []
     loop do
-      display_input_description
-      guess = extract_guess
+      display_guess_input_description
+      guess = extract_guess_from_input
       break if guess
     end
     guess
@@ -18,12 +18,19 @@ class CodeBreaker # rubocop:disable Style/Documentation
 
   def extract_guess_from_input
     guess = gets.split(/\s*,\s*|\s+/)
-
-    unless only_integers_present?(guess)
-      puts 'Please provide only integers corresponding to the correct color...'.colorize(color: :red, mode: :bold)
+    # debugger if DEBUG
+    unless only_permitted_integers_present?(guess) && guess_length_correct?(guess)
+      puts "Please provide only integers corresponding to the correct color that are ranging from 1 to #{CODE_LENGTH}.."
+        .colorize(
+          color: :red, mode: :bold
+        )
       return nil
     end
-    guess.map(&:convert_to_i)
+    guess.map { |el| convert_to_i(el) - 1 }
+  end
+
+  def guess_length_correct?(guess)
+    guess.length == CODE_LENGTH
   end
 
   def display_guess_input_description
