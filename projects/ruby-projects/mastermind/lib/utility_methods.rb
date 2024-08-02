@@ -12,7 +12,6 @@ module UtilityMethods # rubocop:disable Style/Documentation
   end
 
   def only_permitted_integers_present?(array)
-    debugger if DEBUG
     array.all? do |el|
       el = convert_to_i(el)
       el.is_a?(Integer) && el.between?(1, 4)

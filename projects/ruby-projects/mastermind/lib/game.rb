@@ -21,24 +21,34 @@ class Game
     board.setup_code(code)
   end
 
-  def play_game
+  def play_game # rubocop:disable Metrics/MethodLength
     NUMBER_OF_GUESSES.times do |guess_number| # guess number = numbe of guess.
       guess = process_guess(guess_number)
       p board.code
 
-      winner_present = evaluate_for_winner(guess)
-      board.display(winner_present) # TODO:
+      winner_present = winner_present?(guess)
+      board.display(winner_present)
 
-      break if winner_present
+      if winner_present
+        winner = winner_in_hash?(guess).key(true)
+        display_winner_message(winner)
+        break
+      end
 
-      code_maker.provide_feedback(guess, board.code) # TODO: make provide_feedback
+      code_maker.provide_feedback(guess, board.code)
+      puts
     end
   end
 
   def process_guess(guess_number)
     guess = code_breaker.get_guess
     guess = convert_guess_to_colors(guess)
-    board.update_data(guess_number, guess)
+    board.update_data(
+      guess_number,
+      guess,
+      code_maker.get_correct_positions_count(guess, board.code),
+      code_maker.get_correct_colors_count(guess, board.code)
+    )
     guess
   end
 
@@ -48,18 +58,16 @@ class Game
     end
   end
 
-  def evaluate_for_winner(guess)
-    if code_guessed?(guess)
-      display_winner_message(code_breaker)
-      return true
-    end
+  def winner_in_hash?(guess)
+    return { code_breaker => true, code_maker => false } if code_guessed?(guess)
 
-    if board.no_guess_left?
-      display_winner_message(code_maker)
-      return true
-    end
+    return { code_breaker => false, code_maker => true } if board.no_guess_left?
 
-    false
+    { code_breaker => false, code_maker => false }
+  end
+
+  def winner_present?(guess)
+    winner_in_hash?(guess).values.include? true
   end
 
   def display_winner_message(winner_instance)
