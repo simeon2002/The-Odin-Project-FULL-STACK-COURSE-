@@ -24,7 +24,6 @@ module UtilityMethods # rubocop:disable Style/Documentation
 
   def extract_code_from_input
     code = gets.split(/\s*,\s*|\s+/)
-    debugger if DEBUG
     unless only_permitted_integers_present?(code) && code_length_correct?(code)
       puts "Please provide only integers corresponding to the correct color that are ranging from 1 to #{CODE_LENGTH}.."
         .colorize(

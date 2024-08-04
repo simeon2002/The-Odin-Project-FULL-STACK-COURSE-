@@ -62,8 +62,7 @@ class Game
     end
   end
 
-  def process_guess(guess_number) # rubocop:disable Metrics/MethodLength
-    debugger if DEBUG
+  def process_guess(guess_number)
     guess = code_breaker.generate_guess(board.code)
     p guess if DEBUG
     guess = convert_code_to_colors(guess)
@@ -88,7 +87,8 @@ class Game
     winner_in_hash?(guess).values.include? true
   end
 
-  def display_winner_message(winner_instance) # TODO: display winner message based on computer or 'you' messgae.
+  # TODO: display winner message based on computer or 'you' messgae.
+  def display_winner_message(winner_instance)
     puts
     if winner_instance.is_a?(CodeBreaker) then puts 'code breaker won.'
     elsif winner_instance.is_a?(CodeMaker) then puts 'code maker won.'
