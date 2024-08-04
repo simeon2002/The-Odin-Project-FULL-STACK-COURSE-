@@ -8,28 +8,21 @@ class ComputerCodeBreaker < CodeBreaker # rubocop:disable Style/Documentation
 
   def initialize
     super
-    self.correct_pos_present = false
-    self.previous_guess = nil
+    self.correct_colors_guesses = {}
   end
 
-  def generate_guess(correct_pos_count)
+  def generate_guess(code)
     sleep 2
-    self.correct_pos_present = true if correct_pos_count.zero?
+    code = convert_colors_to_code(code)
 
-    # either guess has no correct color present
-    if !correct_pos_present
-      guess = random_guess
-      previous_guess = guess # rubocop:disable Lint/UselessAssignment
-      guess
-    # or guess has correct color present. We have to find which.
-    else
+    guess = random_guess
 
-    end
+    parse_correct_positions(guess, code)
 
-    # TODO: make correct_pos_present whenever required.
+    replace_guess_colors_to_correct(guess)
+
+    guess
   end
-
-  # useful: COLORS.repeated_permutation(CODE_LENGTH).to_a --> gives all possible permutations of length specified code_length
 
   def random_guess
     (0...COLORS.length).to_a.shuffle
@@ -37,5 +30,17 @@ class ComputerCodeBreaker < CodeBreaker # rubocop:disable Style/Documentation
 
   private
 
-  attr_accessor :correct_pos_present, :previous_guess
+  def parse_correct_positions(guess, code)
+    guess.each_with_index do |el, i|
+      correct_colors_guesses[i] = el if guess[i] == code[i]
+    end
+  end
+
+  def replace_guess_colors_to_correct(guess)
+    correct_colors_guesses.each do |k, v|
+      guess[k] = v
+    end
+  end
+
+  attr_accessor :correct_colors_guesses
 end

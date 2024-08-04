@@ -7,7 +7,7 @@ class CodeMaker
   include UtilityMethods
 
   # defined in sub classes
-  def generate_code; end
+  # def generate_code; end
 
   def provide_feedback(guess, code)
     debugger if DEBUG # rubocop:disable Lint/Debugger

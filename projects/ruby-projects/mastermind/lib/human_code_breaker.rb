@@ -4,8 +4,7 @@ require_relative 'shared_constants'
 class HumanCodeBreaker < CodeBreaker # rubocop:disable Style/Documentation
   include SharedConstants
 
-  def generate_guess
-    debugger
+  def generate_guess(_code)
     guess = []
     loop do
       display_guess_input_description

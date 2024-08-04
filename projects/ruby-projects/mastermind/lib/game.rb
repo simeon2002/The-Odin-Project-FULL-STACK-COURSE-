@@ -26,7 +26,6 @@ class Game
     when 1
       self.code_breaker = ComputerCodeBreaker.new
       self.code_maker = HumanCodeMaker.new
-      debugger
     end
 
     code = code_maker.generate_code
@@ -65,7 +64,7 @@ class Game
 
   def process_guess(guess_number) # rubocop:disable Metrics/MethodLength
     debugger if DEBUG
-    guess = code_breaker.generate_guess(code.get_correct_positions_count)
+    guess = code_breaker.generate_guess(board.code)
     p guess if DEBUG
     guess = convert_code_to_colors(guess)
     board.update_data(

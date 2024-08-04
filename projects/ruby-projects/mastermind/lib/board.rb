@@ -16,7 +16,7 @@ class Board
     @guess_hints = []
   end
 
-  def display(winner_present)
+  def display(winner_present) # rubocop:disable Metrics/MethodLength
     puts "\nBOARD\n_____".colorize(mode: :bold)
 
     board.each_with_index do |guess, index|
