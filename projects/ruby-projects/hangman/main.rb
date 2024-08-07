@@ -1,26 +1,19 @@
 require_relative 'lib/game'
 
-def play_again?
-  loop do
-    puts 'Do you want to play the game again? [y]es or [n]o'
-    answer = gets.chomp.downcase
-    if %w[y yes].include?(answer)
-      return true
-    elsif %w[n no].include?(answer)
-      return false
-    end
-
-    puts 'please provide a yes or no answer.'
-  end
-end
-
-game = Game.new
+# MAIN
+#------
+load_game = Game.load_game?
+game = load_game == true ? Game.load_game : Game.new
+game.setup_game unless load_game == true
 
 loop do
   game.play_game
 
-  unless play_again?
-    puts 'Okay, thank you for playin! Until next time.'
+  unless Game.play_again?
+    puts 'Okay, thank you for playing! Until next time.'
     break
   end
+
+  puts
+  game.reset_game
 end

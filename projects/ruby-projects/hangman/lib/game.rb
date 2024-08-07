@@ -1,11 +1,19 @@
 require_relative 'word_guesser'
 require_relative 'word_maker'
+require_relative 'screen_message_utility'
+require_relative 'save_utils'
+require_relative 'game_utils'
 require 'debug'
 require 'colorize'
+require 'yaml'
 
 class Game # rubocop:disable Style/Documentation
-  NUMBER_OF_GUESSES = 16
+  include ScreenMessageUtility
+  extend SaveUtils
+  include GameUtils
   DEBUG = true
+
+  @@game_file_number = 0 # rubocop:disable Style/ClassVars
 
   def initialize
     @chars_tried = []
@@ -17,19 +25,54 @@ class Game # rubocop:disable Style/Documentation
     @correct_guess_count = 0
   end
 
-  def play_game
-    setup_game
-
+  def self.play_again?
     loop do
-      self.guess_count -= 1
-      debugger
-      char_guess = retrieve_player_guess
+      puts 'Do you want to play another game? [y]es or [n]o'
+      answer = gets.chomp.downcase
+      if %w[y yes].include?(answer)
+        return true
+      elsif %w[n no].include?(answer)
+        return false
+      end
 
-      play_round(char_guess)
+      puts 'please provide a yes or no answer.'
+    end
+  end
 
-      chars_tried << char_guess unless chars_tried.include?(char_guess)
+  def self.load_game?
+    puts 'Do you want to load a previously saved game? [y]es or [n]o'
+    answer = gets.chomp.downcase
 
+    return true if %w[y yes].include?(answer)
+
+    false
+  end
+
+  def self.load_game
+    file = parse_file_from_yaml
+    game = Game.from_yaml(file.read)
+    file.close
+
+    ScreenMessageUtility.display_loading_game
+
+    game
+  end
+
+  def play_game # rubocop:disable Metrics/MethodLength
+    loop do
       display_board
+
+      self.guess_count -= 1
+      guess = retrieve_player_guess
+
+      if guess == 'save'
+        save_game
+        break
+      end
+
+      play_round(guess)
+
+      chars_tried << guess unless chars_tried.include?(guess)
 
       break if end_of_game?
     end
@@ -41,16 +84,55 @@ class Game # rubocop:disable Style/Documentation
     self.word_guessed = []
     self.guess_count = NUMBER_OF_GUESSES
     self.correct_guess_count = 0
+    setup_game
   end
 
-  def save_game; end
-
-  private
+  def save_game
+    debugger
+    Dir.mkdir('saved_games') unless Dir.exist?('saved_games') # rubocop:disable Lint/NonAtomicFileOperation
+    game_file = File.new("saved_games/game_file#{@@game_file_number}_#{Time.now.strftime('%c')}.yaml", 'w')
+    game_file << to_yaml
+    game_file.close
+    @@game_file_number += 1 # rubocop:disable Style/ClassVars
+  end
 
   def setup_game
     self.word_generated = word_maker.generate_word.chars
     self.word_guessed = Array.new(word_generated.length) { |_| '_' }
+    welcome_message
   end
+
+  def to_yaml
+    {
+      chars_tried: chars_tried,
+      word_generated: word_generated,
+      word_guessed: word_guessed,
+      guess_count: guess_count,
+      correct_guess_count: correct_guess_count
+    }.to_yaml
+  end
+
+  def self.from_yaml(string)
+    data = YAML.load(string) # rubocop:disable Security/YAMLLoad
+    game = new
+
+    # Directly set instance variables, bypassing private accessors
+    game.instance_variable_set(:@chars_tried, data[:chars_tried])
+    game.instance_variable_set(:@word_generated, data[:word_generated])
+    game.instance_variable_set(:@word_guessed, data[:word_guessed])
+    game.instance_variable_set(:@guess_count, data[:guess_count])
+    game.instance_variable_set(:@correct_guess_count, data[:correct_guess_count])
+
+    game
+  end
+
+  def display_board
+    display_word_guess
+    display_guess_counts
+    puts
+  end
+
+  private
 
   def play_round(char_guess)
     if char_already_tried?(char_guess)
@@ -60,95 +142,6 @@ class Game # rubocop:disable Style/Documentation
       self.correct_guess_count += 1
     else # when not tried already AND not present in word
       display_wrong_guess(char_guess)
-    end
-  end
-
-  def add_char_to_guess(char_guess)
-    char_indices = store_indices_in_word_of(char_guess)
-    char_indices.each do |index|
-      word_guessed[index] = char_guess
-    end
-  end
-
-  def retrieve_player_guess
-    prompt_player_move
-    word_guesser.extract_guess_from_input
-  end
-
-  def store_indices_in_word_of(char)
-    char_indices = []
-    word_generated.each_index { |i| char_indices << i if word_generated[i] == char }
-    char_indices
-  end
-
-  def display_board
-    display_word_guess
-    display_guess_counts
-    puts
-  end
-
-  def display_word_guess
-    puts "The current word you have is: #{word_guessed.join(' ')}"
-  end
-
-  def display_guess_counts
-    puts "Currently, you have #{guess_count} guesses left."
-    puts "You have #{correct_guess_count} correct guesses and #{wrong_guess_count} wrong guesses"
-  end
-
-  def display_player_won
-    puts 'You won, congratulations!'
-  end
-
-  def display_player_lost
-    puts 'You lost, better next time!'
-  end
-
-  def display_wrong_guess(char_guess)
-    puts "Wrong guess, #{char_guess} isn't present in the word "
-      .colorize(color: :red)
-  end
-
-  def display_recurring_char
-    puts 'Unfortunately you have already tried this characters. Be more careful next time.. you just lost a guess!\n'.colorize(color: :red) # rubocop:disable Layout/LineLength
-  end
-
-  def char_present?(char_guess)
-    word_generated.include?(char_guess)
-  end
-
-  def char_already_tried?(char_guess)
-    chars_tried.include?(char_guess)
-  end
-
-  def prompt_player_move
-    puts 'Provide a guess of a character that might be present please. NOTE: if more than one character is given, only the first character will be used for your guess!'.colorize(mode: :bold) # rubocop:disable Layout/LineLength
-  end
-
-  def wrong_guess_count
-    guesses_taken = NUMBER_OF_GUESSES - guess_count
-
-    guesses_taken - correct_guess_count
-  end
-
-  def player_lost?
-    # debugger
-    guess_count.zero?
-  end
-
-  def player_won?
-    word_generated == word_guessed
-  end
-
-  def end_of_game?
-    if player_lost?
-      display_player_lost
-      true
-    elsif player_won?
-      display_player_won
-      true
-    else
-      false
     end
   end
 

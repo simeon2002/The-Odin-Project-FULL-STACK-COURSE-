@@ -5,3 +5,4 @@ source 'https://rubygems.org'
 gem 'colorize', '~> 1.0'
 gem 'debug'
 gem 'rubocop', '~> 1.65', require: false
+require 'yaml'

@@ -1,0 +1,31 @@
+---
+:chars_tried:
+- a
+- b
+- c
+- o
+- u
+- i
+- d
+- e
+- l
+:word_generated:
+- d
+- e
+- a
+- d
+- l
+- i
+- "n"
+- e
+:word_guessed:
+- d
+- e
+- a
+- d
+- l
+- i
+- _
+- e
+:guess_count: 5
+:correct_guess_count: 5
