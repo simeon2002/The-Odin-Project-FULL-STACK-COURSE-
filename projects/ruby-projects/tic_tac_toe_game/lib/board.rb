@@ -39,6 +39,18 @@ class Board
     winning_pattern_of_three?(player_symbol)
   end
 
+  def move_by_player(player)
+    puts "It is #{player.name}'s turn. " \
+         'Provide a play by specifying the row and column you want to put your marker.'.colorize(
+           color: :green, mode: :bold
+         )
+    row, column = get_row_and_column
+    add_grid_element(player, row, column)
+    # board_grid.display
+  end
+
+  private
+
   def winning_pattern_of_three?(symbol)
     board_grid.each_with_index do |row, row_ind|
       row.each_with_index do |el, col_ind|
@@ -70,16 +82,6 @@ class Board
     board_grid[row][column] = player.symbol
   end
 
-  def move_by_player(player)
-    puts "It is #{player.name}'s turn. " \
-         'Provide a play by specifying the row and column you want to put your marker.'.colorize(
-           color: :green, mode: :bold
-         )
-    row, column = get_row_and_column
-    add_grid_element(player, row, column)
-    # board_grid.display
-  end
-
   def grid_element_empty?(row, column)
     board_grid[row][column] == ' '
   end
@@ -100,8 +102,6 @@ class Board
     end
     [row, column]
   end
-
-  private
 
   attr_accessor :board_grid
 end

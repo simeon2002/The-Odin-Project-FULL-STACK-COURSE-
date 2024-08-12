@@ -8,7 +8,6 @@ DEBUG = false
 # CODING EXAMPLE
 
 def clean_zipcode(zipcode)
-  debugger
   zipcode.to_s.rjust(5, '0')[0..4]
 end
 
@@ -36,30 +35,6 @@ def save_thank_you_letter(id, form_letter)
     file.puts form_letter
   end
 end
-
-puts 'EventManager initialized.'
-
-contents = CSV.open(
-  'attendees_large.csv',
-  headers: true,
-  header_converters: :symbol
-)
-
-# template_letter = File.read('form_letter.erb')
-# erb_template = ERB.new template_letter
-
-# contents.each do |row|
-#   id = row[0]
-#   name = row[:first_name]
-#   zipcode = clean_zipcode(row[:zipcode])
-#   legislators = legislators_by_zipcode(zipcode)
-
-#   form_letter = erb_template.result(binding)
-
-#   save_thank_you_letter(id,form_letter)
-# end
-
-# # CLEAN PHONE NUMBERS ASSIGNMENT
 
 def parse_phone_number(row)
   row[:homephone].delete('^0-9')
@@ -100,10 +75,29 @@ def get_top5_count(count)
 end
 
 # MAIN
+#-------
+start_time = Time.now
+p start_time
+puts 'EventManager initialized.'
+
+contents = CSV.open(
+  'attendees_large.csv',
+  headers: true,
+  header_converters: :symbol
+)
+
+template_letter = File.read('form_letter.erb')
+erb_template = ERB.new template_letter
+
 hours_count = Hash.new(0)
 weekday_count = Hash.new(0)
 
 contents.each do |row|
+  id = row[0]
+  name = row[:first_name]
+  zipcode = clean_zipcode(row[:zipcode])
+  legislators = legislators_by_zipcode(zipcode)
+
   phone_number = process_phone_number(parse_phone_number(row))
 
   reg_date = parse_registration_date(row)
@@ -111,6 +105,10 @@ contents.each do |row|
   weekday = reg_date.strftime('%A')
   increment_count_grouped_by(hour, hours_count)
   increment_count_grouped_by(weekday, weekday_count)
+
+  form_letter = erb_template.result(binding)
+
+  save_thank_you_letter(id, form_letter)
 
   (p "#{phone_number} --- #{before}" unless before == phone_number) if DEBUG
 end
@@ -123,3 +121,8 @@ weekday_highest_count = weekday_count.max[0]
 
 puts "We can see that the top 5 hours in which registrations were the most are: #{hours_count_top5.reverse.join('h, ')}h." # rubocop:disable Layout/LineLength
 puts "We can see that the weekday with the highest number of registrations is a #{weekday_highest_count}."
+
+p finish_time = Time.now
+p "The code took #{finish_time - start_time} to execute"
+
+p File.open('event_attendees.csv')

@@ -21,15 +21,7 @@ class Game
     puts '_______________'.colorize(mode: :bold)
     @player2.get_name
 
-    prompt_rounds_to_play
-  end
-
-  def prompt_rounds_to_play
-    loop do
-      puts 'How many rounds do you want to play?'.colorize(mode: :bold)
-      @rounds = gets.chomp.to_i
-      break unless @rounds.zero?
-    end
+    get_rounds_to_play
   end
 
   def play_game # rubocop:disable Metrics/MethodLength
@@ -42,16 +34,26 @@ class Game
 
       next if round == rounds
 
-      message_intermediate_score(round)
+      display_intermediate_score(round)
       board.clear_grid
     end
     display_winner
   end
 
-  def message_intermediate_score(round)
-    puts "Round #{round} finished!"
-    display_score
-    puts
+  def reset
+    self.score = [0, 0]
+    board.clear_grid
+    get_rounds_to_play
+  end
+
+  private
+
+  def get_rounds_to_play # rubocop:disable Naming/AccessorMethodName
+    loop do
+      puts 'How many rounds do you want to play?'.colorize(mode: :bold)
+      @rounds = gets.chomp.to_i
+      break unless @rounds.zero?
+    end
   end
 
   def play_round(round) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
@@ -82,6 +84,12 @@ class Game
     end
   end
 
+  def display_intermediate_score(round)
+    puts "Round #{round} finished!"
+    display_score
+    puts
+  end
+
   def display_score # rubocop:disable Metrics/AbcSize
     if score[0] > score[1]
       puts "SCORE: #{score[0]}-#{score[1]} for #{player1.name}"
@@ -101,14 +109,6 @@ class Game
       puts "It was a draw. #{player1.name} and #{player2.name}, good game!"
     end
   end
-
-  def reset
-    self.score = [0, 0]
-    board.clear_grid
-    prompt_rounds_to_play
-  end
-
-  private
 
   attr_accessor :rounds, :score
   attr_reader :board, :player1, :player2
